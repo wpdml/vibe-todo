@@ -1,0 +1,22 @@
+{
+  "name": "todo-firebase",
+  "version": "1.0.0",
+  "description": "Firebase Realtime Database를 사용한 할일 관리 웹 애플리케이션입니다.",
+  "main": "index.html",
+  "scripts": {
+    "start": "python server.py",
+    "dev": "python server.py",
+    "build": "echo 'No build step required for vanilla JS'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wpdml/vibe-todo.git"
+  },
+  "keywords": ["todo", "firebase", "realtime-database", "javascript"],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wpdml/vibe-todo/issues"
+  },
+  "homepage": "https://github.com/wpdml/vibe-todo#readme"
+}

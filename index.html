@@ -185,6 +185,49 @@
         </div>
     </div>
 
-    <script type="module" src="script.js"></script>
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+        import { getDatabase, ref, push, set, onValue, remove, update, off } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
+
+        // Firebase configuration - Netlify 환경 변수 사용
+        const firebaseConfig = {
+            apiKey: "AIzaSyD7vDaNrnnukE5NeLHEMj2IWf9lZIFNGQA",
+            authDomain: "noona-todo-backend-86db8.firebaseapp.com",
+            projectId: "noona-todo-backend-86db8",
+            storageBucket: "noona-todo-backend-86db8.firebasestorage.app",
+            messagingSenderId: "703741653354",
+            appId: "1:703741653354:web:9d4713c6468318240a7513",
+            databaseURL: "https://noona-todo-backend-86db8-default-rtdb.firebaseio.com",
+        };
+
+        // Netlify 환경 변수 지원 (배포 시 자동으로 교체)
+        if (typeof process !== 'undefined' && process.env) {
+            firebaseConfig.apiKey = process.env.VITE_FIREBASE_API_KEY || firebaseConfig.apiKey;
+            firebaseConfig.authDomain = process.env.VITE_FIREBASE_AUTH_DOMAIN || firebaseConfig.authDomain;
+            firebaseConfig.projectId = process.env.VITE_FIREBASE_PROJECT_ID || firebaseConfig.projectId;
+            firebaseConfig.storageBucket = process.env.VITE_FIREBASE_STORAGE_BUCKET || firebaseConfig.storageBucket;
+            firebaseConfig.messagingSenderId = process.env.VITE_FIREBASE_MESSAGING_SENDER_ID || firebaseConfig.messagingSenderId;
+            firebaseConfig.appId = process.env.VITE_FIREBASE_APP_ID || firebaseConfig.appId;
+            firebaseConfig.databaseURL = process.env.VITE_FIREBASE_DATABASE_URL || firebaseConfig.databaseURL;
+        }
+
+        try {
+            // Initialize Firebase
+            const app = initializeApp(firebaseConfig);
+            const database = getDatabase(app);
+
+            // Make Firebase available globally
+            window.firebaseApp = app;
+            window.database = database;
+            window.firebaseRefs = { ref, push, set, onValue, remove, update, off };
+
+            console.log("✅ Firebase initialized successfully");
+        } catch (error) {
+            console.error("❌ Firebase 초기화 실패:", error);
+            alert("Firebase 초기화에 실패했습니다. 콘솔을 확인해주세요.");
+        }
+    </script>
+    <script src="script.js"></script>
 </body>
 </html>
