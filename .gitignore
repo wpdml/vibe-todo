@@ -4,6 +4,13 @@ firebase-debug.log
 firestore-debug.log
 ui-debug.log
 
+# Configuration files with sensitive data
+config.js
+.env
+.env.local
+.env.production
+.env.development
+
 # Node modules (사용하는 경우)
 node_modules/
 
