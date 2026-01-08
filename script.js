@@ -1,11 +1,40 @@
 // Firebase is initialized in index.html
 let app = window.firebaseApp;
 let database = window.database;
-let { ref, push, set, onValue, remove, update, off } = window.firebaseRefs;
+let firebaseRefs = window.firebaseRefs;
 
-if (!app || !database) {
-    console.error("❌ Firebase 초기화 실패: Firebase가 로드되지 않았습니다.");
-    alert("Firebase 초기화에 실패했습니다. 페이지를 새로고침해주세요.");
+// Firebase 함수들을 안전하게 참조
+let ref, push, set, onValue, remove, update, off;
+
+function initializeFirebaseRefs() {
+    if (window.firebaseRefs) {
+        ({ ref, push, set, onValue, remove, update, off } = window.firebaseRefs);
+        console.log("✅ Firebase 참조 초기화 완료");
+        return true;
+    }
+    return false;
+}
+
+// Firebase 초기화 확인 및 함수들 설정
+function checkFirebaseReady() {
+    app = window.firebaseApp;
+    database = window.database;
+    firebaseRefs = window.firebaseRefs;
+
+    if (!app || !database) {
+        console.error("❌ Firebase 초기화 실패: Firebase가 로드되지 않았습니다.");
+        setTimeout(checkFirebaseReady, 100); // 100ms 후 다시 시도
+        return false;
+    }
+
+    if (!initializeFirebaseRefs()) {
+        console.error("❌ Firebase 참조 초기화 실패");
+        setTimeout(checkFirebaseReady, 100); // 100ms 후 다시 시도
+        return false;
+    }
+
+    console.log("✅ Firebase 완전 초기화 성공");
+    return true;
 }
 
 // 할일 데이터 저장
@@ -931,8 +960,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // 현재 날짜 표시
     updateCurrentDate();
 
-    // Firebase 초기화 확인 및 할일 로드
-    if (database) {
+    // Firebase 초기화 확인 및 앱 시작
+    if (checkFirebaseReady()) {
         console.log("🚀 앱 초기화 시작...");
         loadCustomCategories(); // 커스텀 카테고리 먼저 로드
         loadTodos();
@@ -941,15 +970,29 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         console.log("✅ 앱 초기화 완료");
     } else {
-        console.error("❌ 앱 초기화 실패: 데이터베이스 연결 실패");
-        setTimeout(() => {
-            if (database) {
-                loadCustomCategories();
+        console.log("⏳ Firebase 로딩 대기 중...");
+        // Firebase가 로드될 때까지 대기
+        let attempts = 0;
+        const maxAttempts = 50; // 5초 동안 시도
+
+        const tryInitialize = () => {
+            attempts++;
+            if (checkFirebaseReady()) {
+                console.log("🚀 앱 초기화 시작...");
+                loadCustomCategories(); // 커스텀 카테고리 먼저 로드
                 loadTodos();
-                console.log("✅ Firebase 재연결 성공");
+                if (todoInput) {
+                    todoInput.focus();
+                }
+                console.log("✅ 앱 초기화 완료");
+            } else if (attempts < maxAttempts) {
+                setTimeout(tryInitialize, 100);
             } else {
-                alert("Firebase 데이터베이스 연결에 실패했습니다. 페이지를 새로고침해주세요.");
+                console.error("❌ Firebase 초기화 시간 초과");
+                alert("Firebase 연결에 실패했습니다. 페이지를 새로고침해주세요.");
             }
-        }, 1000);
+        };
+
+        setTimeout(tryInitialize, 100);
     }
 });
