@@ -1,0 +1,14 @@
+// Firebase Configuration Example
+// 이 파일을 config.js로 복사하고 실제 Firebase 설정 값으로 변경하세요
+
+const firebaseConfig = {
+    apiKey: "your-api-key-here",
+    authDomain: "your-project.firebaseapp.com",
+    projectId: "your-project-id",
+    storageBucket: "your-project.firebasestorage.app",
+    messagingSenderId: "123456789012",
+    appId: "1:123456789012:web:abcdef123456",
+    databaseURL: "https://your-project-default-rtdb.firebaseio.com",
+};
+
+export default firebaseConfig;
